@@ -1,6 +1,4 @@
-# Codigos utiles para arduino
-
-[![N|Solid](https://cldup.com/dTxpPi9lDf.thumb.png)](https://nodesource.com/products/nsolid)
+# Codigos utiles para arduino 
 
 Aqui encontraras programas utiles para hacer tus tareas, como programas con pantallas lcd, teclados matriciales entre otros.
 
