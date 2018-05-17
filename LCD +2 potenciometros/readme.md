@@ -1,8 +1,8 @@
 # Ejemplo LCD Contador y Lector analogo digital
 
-![Caso 1](https://github.com/miguel5612/Arduino_Utils\LCD%20+2%20potenciometros/Pregunta%20del%20problema/ejercicio1.jpeg)
+![Caso 1](https://raw.githubusercontent.com/miguel5612/Arduino_Utils/master/LCD%20%2B2%20potenciometros/Pregunta%20del%20problema/ejercicio%201.jpeg)
 
-![Caso 2](https://github.com/miguel5612/Arduino_Utils\LCD%20+2%20potenciometros/Pregunta%20del%20problema/ejercicio2.jpeg)
+![Caso 2](https://raw.githubusercontent.com/miguel5612/Arduino_Utils/master/LCD%20%2B2%20potenciometros/Pregunta%20del%20problema/Ejercicio%202.jpeg)
 
 - Cambias de modo presionando el pulsador.
 
