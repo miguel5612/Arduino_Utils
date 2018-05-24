@@ -10,7 +10,7 @@
 #include "binary.h"
 #include <Servo.h>
 
- int mic1 = A1;
+int mic1 = A1;
 int mic2 = A2;
 int mic3 = A0;
 
@@ -34,7 +34,7 @@ int mic3 = A0;
 
 // Tiempo de refresco
 
-#define delayTime 100
+#define delayTime 2000
 
 // Codigo en binario ejemplo
 
@@ -88,7 +88,7 @@ void loop() {
   readMics(); // Esta funcion lee los microfonos y guarda en las variables la ubicacion del cursor
   refrescarMatriz(); //Aqui se mueve el punto
   refrescarServo(); //Aqui se ubica el servo
-  delay(delayTime);
+  delay(delayTime/50);
   // put your main code here, to run repeatedly:
 
 }
