@@ -70,21 +70,27 @@ void setup() {
   Serial.begin(9600); // Inicializamos la comunicación serial
   
   // Usamos la Interrupcion cero del pin D2
-  pinMode(2, INPUT);
-  digitalWrite(2, LOW);
-  attachInterrupt(0, serialInterrupt, CHANGE);
+  //pinMode(2, INPUT);
+  //digitalWrite(2, LOW);
+  //attachInterrupt(0, serialInterrupt, CHANGE);
   
 }
 
 void loop(){
- if(dataAvailable || true){
+
+ if(dataAvailable){
   NewData = true;
   display_data();
- } 
+ }  
+ if ( Serial.available() ) {
+    // read the character and do what you need 
+    serialInterrupt();
+    return; // just runs loop() again immediately
+  }
+ 
 }
 
 void display_data(){
-  
   for ( int i = 0 ; i < width * count + matrix.width() - 1 - spacer; i++ ) {
 
     matrix.fillScreen(0);
@@ -126,14 +132,16 @@ volatile boolean inService = false;
 
 void serialInterrupt(){
   
+  
   if (inService) return;
 
  
   inService = true;
-  interrupts();
+  //interrupts();
   while(!Serial.available());
   while (Serial.available()) {
      char ch = Serial.read();
+    
      if(ch =='('){
        count = 0;
        inChar = true;
@@ -156,6 +164,7 @@ void serialInterrupt(){
      }  
      
      if(ch =='/'){  
+      
        inChar = true;
        while(inChar){
          if (Serial.available()) {
@@ -179,6 +188,7 @@ void serialInterrupt(){
 
            // '/>' baja la velocidad de las letras
            if(ch == '>'){
+            
              if(scrollspeed < 500) {
                scrollspeed = scrollspeed + 50;
              }
@@ -186,6 +196,7 @@ void serialInterrupt(){
            }  
            // '/<' sube a velocidad de las letras          
            if(ch == '<'){
+            
             if(scrollspeed > 50){
              scrollspeed=scrollspeed-50;
             }
@@ -194,12 +205,14 @@ void serialInterrupt(){
 
            // '/e' limpia las matrices        
            if(ch == 'e'){
+            
             dataAvailable = false;
              break; 
            }
            
            // '/p' ipausa el mensaje      
            if(ch == 'p'){
+            
              if(pause == false){
                pause = true;
              } 
@@ -210,6 +223,7 @@ void serialInterrupt(){
            }
            
            else {
+            
             break;  
            }
            
@@ -220,6 +234,7 @@ void serialInterrupt(){
 
     
   }  
+  
   inService = false;
 }
 
