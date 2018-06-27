@@ -1,0 +1,15 @@
+{
+  "name": "rs232_sender",
+  "version": "1.0.0",
+  "description": "Este programa lee un codigo hecho en python y lo transmite atravez del puerto serie.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "serialport": "^6.2.0"
+  }
+}
