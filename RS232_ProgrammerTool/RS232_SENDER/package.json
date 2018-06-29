@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "fs": "0.0.1-security",
+    "line-by-line": "^0.1.6",
     "serialport": "^6.2.0"
   }
 }

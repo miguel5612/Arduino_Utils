@@ -1,4 +1,0 @@
-Pasantia
-lol
-if pasantia
-	cd lol

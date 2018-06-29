@@ -1,0 +1,1 @@
+certutil -encode Program.exe sender.txt
