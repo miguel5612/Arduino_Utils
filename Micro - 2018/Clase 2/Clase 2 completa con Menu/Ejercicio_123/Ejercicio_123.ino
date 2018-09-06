@@ -7,9 +7,9 @@
 #define G 7
 
 #define disp1 6
-#define disp2 5
+#define disp2 5  
 
-#define tiempoEspera 5 // 13 milis es lo mejor para no ver el efecto
+#define tiempoEspera 2 // 13 milis es lo mejor para no ver el efecto
 #define maxNumber 99
 #define btnUp 4
 #define btnSet 3
@@ -19,7 +19,8 @@ int unidades = 0;
 int decenas = 0;
 int menu = 1;
 int fiboIndex = 0;
-bool bandera = false;
+bool bandera = false; 
+bool banderaPulsador = false;
 
 
 const int number[11] = {0b1000000, 0b1111001, 0b0100100, 0b0110000, 0b0011001, 0b0010010, 0b0000010, 0b1111000, 0b0000000, 0b0010000};
@@ -94,12 +95,15 @@ void fibonacciFctn(){
   Serial.println(fiboIndex);
 }
 void contarPulsador(){
-  if(!digitalRead(btnUp)){
+ while(!digitalRead(btnUp)){
+    banderaPulsador= true;
+  } 
+  if(banderaPulsador)
+  {
     aumentarContador();
-    smartDelay(1000); 
-  }else{
-    smartDelay(200); 
+    banderaPulsador = false;
   }
+  smartDelay(10); 
 }
 void disminuirContador(){
   if(unidades>0){
@@ -123,12 +127,12 @@ void aumentarContador(){
 }
 
 void contar(){
-  aumentarContador();
   Serial.print("contador: ");
   Serial.println(contador);
   Serial.print("Unidades: ");
   Serial.println(unidades);
-  smartDelay(1000);
+  smartDelay(100);
+  aumentarContador();
 }
 void smartDelay(int tiempo){
   unsigned long actual = millis();
