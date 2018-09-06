@@ -54,6 +54,7 @@ void setup() //method used to run the source for the one time onlys
 }
 void loop() //method to run the source code repeatedly 
 {
+  //ejemplo 1 listo :)
   
   /*
   switch(menu){
