@@ -9,7 +9,7 @@
 #define disp1 6
 #define disp2 5
 
-#define tiempoEspera 300 // 13 milis es lo mejor para no ver el efecto
+#define tiempoEspera 5 // 13 milis es lo mejor para no ver el efecto
 #define maxNumber 99
 #define btnUp 4
 #define btnSet 3
@@ -62,14 +62,18 @@ void loop(){
   }
   switch(menu){
     case 1:
-      contar();    
+      contar();
+    break;    
     case 2:
       contarPulsador();
+    break;
     case 3: 
       fibonacciFctn();
+    break;
   }
 }
 void fibonacciFctn(){
+  Serial.println("en fibo");
   if(!digitalRead(btnUp)){
     if(fiboIndex<=11) fiboIndex++;
   }else if(!digitalRead(btnSet)){
@@ -108,6 +112,7 @@ void disminuirContador(){
 void aumentarContador(){
   if(contador<maxNumber){
     if(unidades<9){
+      Serial.println("AUMENTO UNIDADES");
       unidades++;
     }else{
         unidades = 0;
@@ -126,11 +131,11 @@ void contar(){
   smartDelay(1000);
 }
 void smartDelay(int tiempo){
-  int actual = millis();
-  while(millis()-actual<tiempo){
+  unsigned long actual = millis();
+  do{
     mostrarNumero();
     delay(tiempoEspera);
-  }
+  }while((millis()-actual<tiempo));
 }
 void mostrarNumero(){
   if(decenas == 0){
