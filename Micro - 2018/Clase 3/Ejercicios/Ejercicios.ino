@@ -1,13 +1,11 @@
-
 #include<LiquidCrystal.h> //Library for LCD
+
 #define btnUp 7
 #define btnSet 6 
 #define LED1 8
 #define LED2 9
 #define LED3 10
 #define timeDelay 200
-
-
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);// LCD pins at which it is attached to the Arduino
 
@@ -18,8 +16,7 @@ int menu = 1;
  
 void setup() //method used to run the source for the one time onlys
 {
-    Serial.begin(9600);
-    
+    Serial.begin(9600);    
     lcd.begin(16, 2);//LCD order i.e. 16 columns & 2 rows
   
     pinMode(LED1,OUTPUT);
@@ -69,6 +66,7 @@ void menuPpal(){
   }
   bandera = false;
   lcd.clear();
+  delay(500);
 }
 void ejemplo1(){
   movStr = "Hola";
@@ -83,23 +81,31 @@ void ejemplo1(){
   }
 }
 void ejemplo2(){
+  switch(menuEx){
+        case 1:
+          lcd.print("Target: LED_1");
+          lcd.setCursor(0,1);
+          lcd.print("Estado=");
+          lcd.print(digitalRead(LED1));
+          delay(timeDelay);
+          break;
+        case 2:
+          lcd.print("Target: LED_2");
+          lcd.setCursor(0,1);
+          lcd.print("Estado=");
+          lcd.print(digitalRead(LED2));
+          delay(timeDelay);
+          break;
+         case 3:
+           lcd.print("Target: LED_3");
+          lcd.setCursor(0,1);
+          lcd.print("Estado=");
+          lcd.print(digitalRead(LED3));
+           delay(timeDelay);
+           break;
+  }
   lcd.setCursor(0,0);//setting cursor on LCD
   lcd.clear();
-  switch(menuEx){
-    case 1:
-      lcd.print("Target: LED_1");
-      delay(timeDelay);
-      break;
-    case 2:
-      lcd.print("Target: LED_2");
-      delay(timeDelay);
-      break;
-     case 3:
-       lcd.print("Target: LED_3");
-       delay(timeDelay);
-       break;
-  }
-  if(!bandera){
     if(!digitalRead(btnUp)) {
       if(menuEx>3){
         menuEx = 0;
@@ -107,37 +113,31 @@ void ejemplo2(){
         menuEx++;
       }
     }else if(!digitalRead(btnSet)){
-      bandera = true;
-    }
-  }
-  if(bandera){
-    switch(menuEx){
+        switch(menuEx){
       case 1:
-        digitalWrite(LED1,HIGH);
-        digitalWrite(LED2,LOW);
-        digitalWrite(LED3,LOW);
+        digitalWrite(LED1,!digitalRead(LED1));
         break;
       case 2:
-        digitalWrite(LED2,HIGH);
-        digitalWrite(LED1,LOW);
-        digitalWrite(LED3,LOW);
+        digitalWrite(LED2,!digitalRead(LED2));
         break;
       case 3:
-        digitalWrite(LED3,HIGH);
-        digitalWrite(LED1,LOW);
-        digitalWrite(LED2,LOW);
+        digitalWrite(LED3,!digitalRead(LED3));
         break;
+    } 
     }
-  }
+    
 }
 void ejemplo3(){
-  int numAleatorio = random(1,20);
+  int numAleatorio = random(1,10);
   lcd.clear();
   lcd.setCursor(0,0);//setting cursor on LCD
-  lcd.print("Num (1-20)");
+  lcd.print("Num (1-10)");
+  lcd.setCursor(0,1);//setting cursor on LCD
+  lcd.print("X=");
+  lcd.print(menuEx);
   while(!bandera){
     if(!digitalRead(btnUp)) {
-      if(menuEx>20){
+      if(menuEx>9){
         menuEx = 0;
       }else{
         menuEx++;
@@ -148,6 +148,7 @@ void ejemplo3(){
       lcd.print(menuEx);
     }else if(!digitalRead(btnSet)){
       bandera = true;
+      delay(timeDelay);
     }
   }
   while(bandera){
@@ -162,6 +163,11 @@ void ejemplo3(){
       lcd.setCursor(0,1);//setting cursor on LCD
       lcd.print("numeroMaquina=");
       lcd.print(numAleatorio);  
+    }
+    if(!digitalRead(btnUp)){
+      bandera = false;
+      menuEx = 1;   
+      return;
     }
     delay(timeDelay);
   }
