@@ -1,5 +1,6 @@
 #include<LiquidCrystal.h> //Library for LCD
 #include <Keypad.h>
+#include <EEPROM.h>
 
 #define btnUp 7
 #define btnSet 6
@@ -11,8 +12,11 @@
 #define C2 27
 #define C3 28
 #define C4 29
+#define motorPin 8
 #define delChar '*'
+#define okChar '#'
 #define timeDelay 200
+#define address 0
 
 
 
@@ -32,31 +36,34 @@ byte rowPins[ROWS] = {F1, F2, F3, F4};
 byte colPins[COLS] = {C1, C2, C3};
 
 bool bandera = false;
-String movStr = "";
+String movStr = "", password,inPassword, velocidadStr;
 int menuEx = 1;
-int menu = 1;
+int menu = 1,velocidad;
 
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 void setup() //method used to run the source for the one time onlys
 {
-    Serial.begin(9600);
-    
+    Serial.begin(9600);    
     lcd.begin(16, 2);//LCD order i.e. 16 columns & 2 rows
-  
-
+    
     pinMode(btnUp,INPUT_PULLUP);
     pinMode(btnSet,INPUT_PULLUP);
+    pinMode(motorPin,OUTPUT);
+    digitalWrite(motorPin,LOW);
     lcd.print("ALLL OK");
     delay(1000);
     lcd.clear();
-    //menuPpal();
+    password = EEPROM.read(address);
+    
+    velocidad = 0;
+    velocidadStr = "";
+    menuPpal();
 }
 void loop() //method to run the source code repeatedly 
 {
-  //ejemplo 1 listo :)
-  
-  /*
+
+
   switch(menu){
     case 1:
       ejemplo1();
@@ -69,7 +76,7 @@ void loop() //method to run the source code repeatedly
       ejemplo3();
       break;
   }
-  */
+  
 }
 
 
@@ -132,90 +139,70 @@ void ejemplo1(){
   }  
 }
 void ejemplo2(){
-  lcd.setCursor(0,0);//setting cursor on LCD
+  inPassword = "";
+  char key = keypad.getKey();
   lcd.clear();
-  switch(menuEx){
-    case 1:
-      lcd.print("Target: LED_1");
-      delay(timeDelay);
-      break;
-    case 2:
-      lcd.print("Target: LED_2");
-      delay(timeDelay);
-      break;
-     case 3:
-       lcd.print("Target: LED_3");
-       delay(timeDelay);
-       break;
-  }
-  if(!bandera){
-    if(!digitalRead(btnUp)) {
-      if(menuEx>3){
-        menuEx = 0;
-      }else{
-        menuEx++;
+  lcd.setCursor(0,0);
+  lcd.print("Press #");
+  if(key == delChar){
+    key = keypad.getKey();
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("** Nueva clave **");
+    lcd.setCursor(0,1);
+    lcd.print("N=");
+    password = "";
+    while(key!=delChar){
+      key = keypad.getKey();      
+      if(key!=NO_KEY){
+       lcd.print(key);
+       password+=key;  
       }
-    }else if(!digitalRead(btnSet)){
-      bandera = true;
     }
-  }
-  if(bandera){
-    /*
-    switch(menuEx){
-      case 1:
-        digitalWrite(LED1,HIGH);
-        digitalWrite(LED2,LOW);
-        digitalWrite(LED3,LOW);
-        break;
-      case 2:
-        digitalWrite(LED2,HIGH);
-        digitalWrite(LED1,LOW);
-        digitalWrite(LED3,LOW);
-        break;
-      case 3:
-        digitalWrite(LED3,HIGH);
-        digitalWrite(LED1,LOW);
-        digitalWrite(LED2,LOW);
-        break;
+    EEPROM.write(address,password.toInt());
+  }if(key == okChar){
+    key = keypad.getKey();
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("** Escriba clave # **");
+    lcd.setCursor(0,1);
+    lcd.print("N=");
+    while(key!=okChar){
+      key = keypad.getKey();      
+      if(key!=NO_KEY){
+       lcd.print(key); 
+       inPassword+=key;  
+      }
     }
-    */
+    if(inPassword == password){
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Ingreso exitoso");
+    }else{
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Ingreso fallido");  
+    }
   }
 }
 void ejemplo3(){
-  int numAleatorio = random(1,20);
+    char key = keypad.getKey();
   lcd.clear();
-  lcd.setCursor(0,0);//setting cursor on LCD
-  lcd.print("Num (1-20)");
-  while(!bandera){
-    if(!digitalRead(btnUp)) {
-      if(menuEx>20){
-        menuEx = 0;
-      }else{
-        menuEx++;
-      }
-      delay(timeDelay);
-      lcd.setCursor(0,1);//setting cursor on LCD
-      lcd.print("X=");
-      lcd.print(menuEx);
-    }else if(!digitalRead(btnSet)){
-      bandera = true;
-    }
+  lcd.setCursor(0,0);
+  lcd.print("Write");
+  lcd.setCursor(0,1);
+  lcd.print("V= ");
+  lcd.print(velocidad);
+  if(key!=NO_KEY){
+       lcd.print(key); 
+       velocidadStr+=key;  
+       velocidad = velocidadStr.toInt();
+       if(velocidad>255){
+          velocidad = 0;
+          velocidadStr = "";
+          lcd.clear();
+       }
   }
-  while(bandera){
-    if(numAleatorio == menuEx){
-      lcd.clear();
-      lcd.setCursor(0,0);//setting cursor on LCD
-      lcd.print(" GANASTE!!!! ");  
-    }else{
-      lcd.clear();
-      lcd.setCursor(0,0);//setting cursor on LCD
-      lcd.print(" PERDISTE ");
-      lcd.setCursor(0,1);//setting cursor on LCD
-      lcd.print("numeroMaquina=");
-      lcd.print(numAleatorio);  
-    }
-    delay(timeDelay);
-  }
-  
+  analogWrite(motorPin, velocidad);  
 }
 
