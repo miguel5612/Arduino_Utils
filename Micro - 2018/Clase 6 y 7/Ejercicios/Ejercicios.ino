@@ -15,6 +15,9 @@
 #define okChar '#'
 #define timeDelay 200
 #define address 0
+#define interruptPin 19
+#define startLed 30
+#define endLed 37
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);// LCD pins at which it is attached to the Arduino
 
@@ -31,6 +34,7 @@ char keys[countRows][countColumns] = {
 {'*','0','#'}
 };
 int countPrinted = 0, countX;
+bool direccion =  true;
 
 // Iniciar valores
 void setup()
@@ -46,12 +50,40 @@ void setup()
       pinMode(rowsPins[r], OUTPUT);
       digitalWrite(rowsPins[r], HIGH);
    }
+   for (byte r = startLed; r <= endLed; r++)
+   {
+      pinMode(r, OUTPUT);
+      digitalWrite(r, LOW);
+   }
+   pinMode(interruptPin, INPUT_PULLUP);
 }
  
 void loop()
 {
-   ejemplo1();
+  
+   //ejemplo1();
+   //ejemplo2();
+
+
    
+}
+void ejemplo2(){
+  attachInterrupt(digitalPinToInterrupt(interruptPin), changeLed, LOW );
+}
+void changeLed(){
+  Serial.println("change led");
+  for (byte r = startLed; r <= endLed; r++)
+   {
+     if(digitalRead(r) == !direccion){
+        digitalWrite(r,direccion);
+        return;
+     }
+   }
+   direccion = !direccion;
+   changeLed();
+   return;
+   Serial.println("change led");
+  
 }
 
 
