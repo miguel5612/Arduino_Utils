@@ -33,8 +33,8 @@ char keys[countRows][countColumns] = {
 {'7','8','9'},
 {'*','0','#'}
 };
-int countPrinted = 0, countX;
-bool direccion =  true;
+int countPrinted = 0, countX, menu=1;
+bool direccion =  true, bandera=false;
 
 // Iniciar valores
 void setup()
@@ -56,16 +56,62 @@ void setup()
       digitalWrite(r, LOW);
    }
    pinMode(interruptPin, INPUT_PULLUP);
+   pinMode(btnUp,INPUT_PULLUP);
+   pinMode(btnSet,INPUT_PULLUP);
+
+  menuPpal();
+
 }
  
 void loop()
 {
-  
-   //ejemplo1();
-   //ejemplo2();
-
-
-   
+ switch(menu){
+    case 1:
+      ejemplo1();
+      break;
+    case 2:
+      ejemplo2();
+      break;
+    case 3:
+      ejemplo3();
+      break;
+  }
+}
+void menuPpal(){
+  lcd.setCursor(0,0);//setting cursor on LCD
+  lcd.print("Seleccione ejemplo");//prints on LCD  
+  lcd.setCursor(0,1);//setting cursor on LCD  
+  lcd.print("x=");//prints on LCD
+  lcd.print(menu);
+    
+  while(!bandera){
+    if(!digitalRead(btnUp)) {
+      if(menu>2){
+        menu = 1;
+      }else{
+        menu++;
+      }
+      delay(timeDelay);
+      lcd.setCursor(0,1);//setting cursor on LCD  
+      lcd.print("x=");//prints on LCD
+      lcd.print(menu);
+    }else if(!digitalRead(btnSet)){
+      bandera = true;
+    }
+  }
+  bandera = false;
+  lcd.clear();
+}
+void ejemplo3(){
+   pinMode(9, OUTPUT); // OUT Timer 1
+   pinMode(10,OUTPUT); // Out Timer 2
+   TCCR1A=0;//reset the register
+   TCCR1B=0;//reset the register
+   TCNT1=0;
+   TCCR1A=0b01010011;//COM1A0,COM1B0 are 1, COM1A1, COM1B1 are 0
+   //also WGM11, WGM10 are 1
+   TCCR1B=0b00010001;//WGM13 is 1 and WGM12 is 0 with no prescaler CS10 is 1
+   OCR1A=4000;// compare value
 }
 void ejemplo2(){
   attachInterrupt(digitalPinToInterrupt(interruptPin), changeLed, LOW );
