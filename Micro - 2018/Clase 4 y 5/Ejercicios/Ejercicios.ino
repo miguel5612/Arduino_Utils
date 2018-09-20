@@ -1,18 +1,20 @@
-#include<LiquidCrystal.h> //Library for LCD
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+
 #include <Keypad.h>
 #include <EEPROM.h>
 
-#define btnUp 7
-#define btnSet 6
-#define F1 22
-#define F2 23
-#define F3 24 
-#define F4 25
-#define C1 26
-#define C2 27
-#define C3 28
-#define C4 29
-#define motorPin 8
+#define btnUp 4
+#define btnSet 3
+#define F1 13
+#define F2 12
+#define F3 11 
+#define F4 10
+#define C1 9
+#define C2 8
+#define C3 7
+#define C4 6
+#define motorPin 5
 #define delChar '*'
 #define okChar '#'
 #define timeDelay 200
@@ -21,7 +23,7 @@
 
 
 
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2);// LCD pins at which it is attached to the Arduino
+LiquidCrystal_I2C lcd(0x20,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display 0x3F Fisical
 
 const byte ROWS = 4; //four rows
 const byte COLS = 3; //three columns
@@ -45,7 +47,8 @@ Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 void setup() //method used to run the source for the one time onlys
 {
     Serial.begin(9600);    
-    lcd.begin(16, 2);//LCD order i.e. 16 columns & 2 rows
+    lcd.init();
+    lcd.backlight();
     
     pinMode(btnUp,INPUT_PULLUP);
     pinMode(btnSet,INPUT_PULLUP);
