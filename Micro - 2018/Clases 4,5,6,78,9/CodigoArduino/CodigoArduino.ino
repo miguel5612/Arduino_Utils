@@ -3,7 +3,7 @@
 #include <EEPROM.h>
 
 //Variables empleadas para leer el teclado
-int rowCounter =0,columnCounter =0,foundColumn = 0,keyValue = 0, noKey = 0,debounce = 100, keyNum, menu=0, counter1 = 0, counter2 = 0,velocidad;
+int rowCounter =0,columnCounter =0,foundColumn = 0,keyValue = 0, noKey = 0,debounce = 100, keyNum, menu=0, counter1 = 0, counter2 = 0,velocidad, posX = 0, posY = 0;
 boolean foundCol = false, readKey = false,numericValue = false, estado;
 String keyString, clave;
 
@@ -20,6 +20,16 @@ const int colC = 50;
 const int colD = 51;
 const int led[] = {0,30,31,32,33,34,35,36,8};
 
+const String uno[] = {"a", "b", "c"};
+const String dos[] = {"d", "e", "f"};
+const String tres[] = {"g", "h", "i"};
+const String cuatro[] = {"j", "k", "l"};
+const String cinco[] = {"m", "n", "o"};
+const String seis[] = {"p", "q", "r"};
+const String siete[] = {"s", "t", "v"};
+const String ocho[] = {"w", "x", "y"};
+const String nueve[] = {"z", "Z", "A"};
+const String palabraIn[32];
 #define exitKey "Esc"
 #define clearKey "*"
 #define changeClaveKey "F1"
@@ -441,16 +451,86 @@ void programa8(){
 }
 void programa9(){
   //Celular de segunda generacion
-  const string uno[] = {"a", "b", "c"};
-  const string dos[] = {"d", "e", "f"};
-  const string tres[] = {"g", "h", "i"};
-  const string cuatro[] = {"j", "k", "l"};
-  const string cinco[] = {"m", "n", "o"};
-  const string seis[] = {"p", "q", "r"};
-  const string siete[] = {"s", "t", "v"};
-  const string ocho[] = {"w", "x", "y"};
-  const string nueve[] = {"z", "Z", "A"};
+  unsigned long oldTime;
+  int pos = 0;
+  readKeyboard();
+  if(newKey()){
+      Serial.println("Primera pulsasion");
+      convertKey();
+      validateExit(keyString);
+      lcd.setCursor(posX,posY);
+      lcd.print(getNumber(keyString.toInt(),pos));
+      saveAndCompare(getNumber(keyString.toInt(),pos),posX, posY);
+      oldTime = millis();
+      readKey = false;
+      while(millis()-oldTime<1000){
+        readKeyboard();
+        if(newKey()){
+          Serial.print("pos: ");
+          Serial.println(pos);
+          pos++;
+          lcd.setCursor(posX,posY);
+          lcd.print(getNumber(keyString.toInt(),pos));
+          saveAndCompare(getNumber(keyString.toInt(),pos),posX, posY);
+          delay(100);
+        }
+      }
+      readKey = false;
+      posX++;  
+      Serial.println("posX ha aumentado");
+  }
+  if(posX>=15) {posY++;posX=0;}
+  if(posY>=2){posX = 0; posY = 0;}
+}
+void saveAndCompare(String letter, int posInX, int posInY){
+  if(posInY!=0){posInX = posInX + 16;}
+  palabraIn[posInX] = letter;
+  String palabra;
+  for(int i=0;i<=posInX;i++){
+    palabra+=palabraIn[i];
+  }
+  Serial.print("palabra: ");Serial.println(palabra);
+  if(palabra.indexOf("clc") > 0){lcd.clear();posX = 0; posY = 0;}
   
+}
+String getNumber(int numIn, int pos){
+  if(pos>=4){pos = pos/3;}
+  switch(numIn){
+    case 1:
+      return uno[pos];
+      break;
+    case 2:
+      return dos[pos];
+      break;
+      
+    case 3:
+      return tres[pos];
+      break;
+      
+    case 4:
+      return cuatro[pos];
+      break;
+      
+    case 5:
+      return cinco[pos];
+      break;
+      
+    case 6:
+      return seis[pos];
+      break;
+      
+    case 7:
+      return siete[pos];
+      break;
+      
+    case 8:
+      return ocho[pos];
+      break;
+      
+    case 9:
+      return nueve[pos];
+      break;
+  }
 }
 void printMenu(){
   lcd.clear();
