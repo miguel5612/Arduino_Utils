@@ -61,6 +61,18 @@ void setup(){
   }
   printMenu();
   
+  pinMode(10, OUTPUT);
+ 
+
+  TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM11) | _BV(WGM10);
+  TCCR1B = _BV(WGM13) | _BV(WGM12) | _BV(CS11) | _BV(CS10);
+  
+  OCR1AH = 0;
+  OCR1AL = 250;
+  
+  OCR1BH = 0;
+  OCR1BL = 30;
+  
 }
 
 void loop(){
@@ -339,6 +351,12 @@ void programa4(){
 void programa5(){
   counter1 = 0;
   while(counter1<=8){
+    readKeyboard();
+    if(newKey()){
+      convertKey();
+      validateExit(keyString);
+      readKey = false;
+    }
     attachInterrupt(digitalPinToInterrupt(interruptPin), changeLed, CHANGE);
     digitalWrite(led[counter1],HIGH);
     delay(500);
@@ -355,20 +373,83 @@ void programa5(){
   }
 }
 void changeLed(){
-  digitalWrite(led[counter1+1],HIGH);
+  digitalWrite(led[counter1+1],!digitalRead(led[counter1+1]));
   counter1++;
-  delay(100);
+  delay(50);
 }
 void programa6(){
-  
+  lcd.clear();
+  lcd.print("OutputPin(10)");
+  delay(1000);
+   readKeyboard();
+    if(newKey()){
+      convertKey();
+      validateExit(keyString);
+      readKey = false;
+    }
+
 }
 void programa7(){
-  
+  lcd.setCursor(0,0);
+  lcd.clear();
+  lcd.print("Retardo 1s");
+  lcd.setCursor(0,1);
+  lcd.print("s = ");
+  while(counter1<10){
+    readKeyboard();
+    if(newKey()){
+      convertKey();
+      validateExit(keyString);
+      readKey = false;
+    }
+    retardoUnSegundo();
+    lcd.print(counter1);
+    counter1++;
+  }
+  counter1 = 0;
+}
+void retardoUnSegundo(){
+  unsigned long tiempo = millis();
+  while(millis()-tiempo<1000){
+    Serial.println("no hago nada");
+    delay(50);
+  }
 }
 void programa8(){
-  
+  unsigned long oldMillis = millis();
+  float m = 0;
+  while(counter1<=60){
+      readKeyboard();
+      if(newKey()){
+        convertKey();
+        validateExit(keyString);
+        readKey = false;
+      }
+      lcd.setCursor(0,0);
+      lcd.clear();
+      lcd.print("contador 0-60");
+      lcd.setCursor(0,1);
+     lcd.print("t = ");
+     lcd.print(counter1);
+     lcd.print(" m= ");
+     m = millis()-oldMillis;
+     lcd.print(m/1000,2);
+     delay(1000); 
+     counter1++;
+  }  
+  counter1=0;
 }
 void programa9(){
+  //Celular de segunda generacion
+  const string uno[] = {"a", "b", "c"};
+  const string dos[] = {"d", "e", "f"};
+  const string tres[] = {"g", "h", "i"};
+  const string cuatro[] = {"j", "k", "l"};
+  const string cinco[] = {"m", "n", "o"};
+  const string seis[] = {"p", "q", "r"};
+  const string siete[] = {"s", "t", "v"};
+  const string ocho[] = {"w", "x", "y"};
+  const string nueve[] = {"z", "Z", "A"};
   
 }
 void printMenu(){
