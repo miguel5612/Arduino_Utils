@@ -23,6 +23,7 @@ const int led[] = {0,30,31,32,33,34,35,36,8};
 #define exitKey "Esc"
 #define clearKey "*"
 #define changeClaveKey "F1"
+#define interruptPin 2
 
 LiquidCrystal_I2C lcd(0x3F,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 
@@ -31,6 +32,7 @@ void setup(){
   lcd.init();
   lcd.print("INIT SYSTEM");
   lcd.backlight();
+  pinMode(interruptPin, INPUT_PULLUP);
   pinMode(row1, OUTPUT);
   pinMode(row2, OUTPUT);
   pinMode(row3, OUTPUT);
@@ -311,10 +313,51 @@ void programa3(){
   }
 }
 void programa4(){
-  
+  readKey = false;  
+  readKeyboard();
+  if(newKey()){
+    convertKey();
+    validateExit(keyString);
+    if(validateClear(keyString)) return;
+    if(counter1<16){
+      if(counter1==0){lcd.setCursor(0,0);}
+      lcd.print(keyString);
+      counter1+=keyString.length();
+      delay(50);
+    }else if(counter2<16){
+      if(counter1==16 & counter2 == 0)  lcd.setCursor(0,1);
+      lcd.print(keyString);
+      counter2+=keyString.length();
+      delay(50);
+    }else{
+      counter1 =0;counter2=0;
+      delay(50);
+    }
+    readKey = false;
+  }  
 }
 void programa5(){
-  
+  counter1 = 0;
+  while(counter1<=8){
+    attachInterrupt(digitalPinToInterrupt(interruptPin), changeLed, CHANGE);
+    digitalWrite(led[counter1],HIGH);
+    delay(500);
+    digitalWrite(led[counter1],LOW);
+    delay(500);
+    
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Secuencia");
+    lcd.setCursor(0,1);
+    lcd.print("X=");
+    lcd.print(counter1);
+    counter1++;
+  }
+}
+void changeLed(){
+  digitalWrite(led[counter1+1],HIGH);
+  counter1++;
+  delay(100);
 }
 void programa6(){
   
