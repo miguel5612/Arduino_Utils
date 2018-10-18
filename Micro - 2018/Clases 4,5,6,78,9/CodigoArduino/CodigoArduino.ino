@@ -3,7 +3,7 @@
 #include <EEPROM.h>
 
 //Variables empleadas para leer el teclado
-int rowCounter =0,columnCounter =0,foundColumn = 0,keyValue = 0, noKey = 0,debounce = 100, keyNum, menu=0, counter1 = 0, counter2 = 0;
+int rowCounter =0,columnCounter =0,foundColumn = 0,keyValue = 0, noKey = 0,debounce = 100, keyNum, menu=0, counter1 = 0, counter2 = 0,velocidad;
 boolean foundCol = false, readKey = false,numericValue = false, estado;
 String keyString, clave;
 
@@ -18,7 +18,7 @@ const int colA = 48;
 const int colB = 49;
 const int colC = 50;
 const int colD = 51;
-const int led[] = {0,30,31,32,33,34,35,36,37};
+const int led[] = {0,30,31,32,33,34,35,36,8};
 
 #define exitKey "Esc"
 #define clearKey "*"
@@ -29,6 +29,7 @@ LiquidCrystal_I2C lcd(0x3F,16,2);  // set the LCD address to 0x27 for a 16 chars
 void setup(){
   Serial.begin(9600);
   lcd.init();
+  lcd.print("INIT SYSTEM");
   lcd.backlight();
   pinMode(row1, OUTPUT);
   pinMode(row2, OUTPUT);
@@ -113,6 +114,7 @@ void loop(){
           readKey = false;
           lcd.clear();
           lcd.print("INGRESE LA CLAVE");
+          lcd.setCursor(0,1);
           menu=2;
           break;
        case 3:
@@ -215,7 +217,7 @@ boolean validateChangeClave(String key){
     lcd.clear();
     lcd.print("**Nueva Clave**");
     lcd.setCursor(0,1);
-    while(counter1<=3){
+    while(counter1<3){
       readKey = false;  
       readKeyboard();
       if(newKey()){
@@ -224,15 +226,30 @@ boolean validateChangeClave(String key){
         clave += keyString;
         EEPROM.write(address,keyString.toInt());
         counter1++;address++;clave="";
-      }
+      }      
     }
+    delay(1500);
+    counter1 = 0; clave = ""; readKey = false; 
     lcd.clear();
+    lcd.print("Escriba la clave:");
+    lcd.setCursor(0,1);
     return true;
   }
+  return false;
 }
 void programa2(){
-  readKey = false;  
   readKeyboard();
+  if(newKey()){
+      convertKey();
+      validateExit(keyString);
+      if(validateChangeClave(keyString)) return;
+      if(validateClear(keyString)) return;
+      clave+=keyString;
+      lcd.print(keyString);
+      counter1++;
+      readKey = false;  
+      delay(100);
+  }
   if(counter1>=3){
     lcd.clear();
     if(getPass() == clave){
@@ -240,28 +257,58 @@ void programa2(){
       digitalWrite(led[1],HIGH);
       digitalWrite(led[8],LOW);
       lcd.print("CLAVE CORRECTA!!");
+      delay(2000);
+      digitalWrite(led[1],LOW);
     }else{
       Serial.println("Acceso denegado");
       digitalWrite(led[1],LOW);
       digitalWrite(led[8],HIGH);
       lcd.print("CLAVE INCORRECTA!!");
+      delay(5000);
+      digitalWrite(led[8],LOW);
     }
     counter1 = 0;
     clave = "";
     lcd.clear();
-  }else{
-    if(newKey()){
-    convertKey();
-    validateExit(keyString);
-    if(validateChangeClave(keyString)) return;
-    if(validateClear(keyString)) return;
-      clave+=keyString;
-    }
+    lcd.print("Digite la clave");
+    lcd.setCursor(0,1);
   }
-  
 }
 void programa3(){
-  
+  lcd.print("Introduzca la velocidad");
+  lcd.setCursor(0,1);
+  lcd.print("v = ");
+  String veloString = "";
+  while(keyString!=exitKey){
+      readKeyboard();
+      if(newKey()){
+        convertKey();
+        veloString += keyString;
+        Serial.print("veloString: ");
+        Serial.println(veloString);
+        Serial.print("veloInt: ");
+        Serial.println(veloString.toInt()>=255);
+        Serial.print("Condicional: ");
+        Serial.println(veloString.toInt());
+        readKey = false;
+        if(veloString.toInt()<=255){
+          lcd.print(keyString);
+          delay(100);
+        }else{
+          lcd.clear();
+          lcd.print("Introduzca la velocidad");
+          lcd.setCursor(0,1);
+          lcd.print("v = ");
+          veloString = keyString;
+          lcd.print(keyString);
+          delay(100);
+        }
+      }else{
+          velocidad = veloString.toInt();
+          analogWrite(led[8],velocidad);           
+        
+      }
+  }
 }
 void programa4(){
   
