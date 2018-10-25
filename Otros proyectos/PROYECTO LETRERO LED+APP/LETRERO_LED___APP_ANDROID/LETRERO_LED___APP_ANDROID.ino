@@ -2,14 +2,12 @@
  
  El mensaje de la pantalla de desplazamiento debe ser enviado delimitado por paréntesis.
  Esto lo explicaremos paso a paso en el tutorial
-
 /p para pausar el desplazamiento. El envío de nuevo se reanuda el desplazamiento.
 /<Para desplazarse más rápido
 /> Para desplazarse más lenta
 /+ Para aumentar el nivel de brillo
 /-  Para disminuir el nivel de brillo
 /e  para borrar la pantalla
-
  
  Connexiones:
  Max 7219                 Arduino
@@ -18,9 +16,7 @@
  LOAD                     pinCS(Pin 10)
  CLK                      SCK  (Pin 13)
  GND                      Gnd
-
  NO OLVIDES VISITAR Y DALE ME GUSTA A: https://www.facebook.com/arduinoquindio/
-
 */
 
 
@@ -237,6 +233,3 @@ void serialInterrupt(){
   
   inService = false;
 }
-
-
-
