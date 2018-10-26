@@ -20,15 +20,15 @@ const int colC = 50;
 const int colD = 51;
 const int led[] = {0,30,31,32,33,34,35,36,8};
 
-const String uno[] = {"a", "b", "c"};
-const String dos[] = {"d", "e", "f"};
-const String tres[] = {"g", "h", "i"};
-const String cuatro[] = {"j", "k", "l"};
-const String cinco[] = {"m", "n", "o"};
-const String seis[] = {"p", "q", "r"};
-const String siete[] = {"s", "t", "v"};
-const String ocho[] = {"w", "x", "y"};
-const String nueve[] = {"z", "Z", "A"};
+const String dos[] = {"a", "b", "c"};
+const String tres[] = {"d", "e", "f"};
+const String cuatro[] = {"g", "h", "i"};
+const String cinco[] = {"j", "k", "l"};
+const String seis[] = {"m", "n", "o"};
+const String siete[] = {"p", "q", "r"};
+const String ocho[] = {"s", "t", "v"};
+const String nueve[] = {"w", "x", "y"};
+const String uno[] = {".", ",", ":","1"};
 const String palabraIn[32];
 #define exitKey "Esc"
 #define clearKey "*"
@@ -464,6 +464,7 @@ void programa9(){
       oldTime = millis();
       readKey = false;
       while(millis()-oldTime<1000){
+        delay(10);
         readKeyboard();
         if(newKey()){
           Serial.print("pos: ");

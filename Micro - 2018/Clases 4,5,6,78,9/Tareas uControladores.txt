@@ -1,0 +1,19 @@
+Clase 4 y 5.
+	Ejemplo 1. Introducir datos por el teclado y visualizarlos en el LCD.
+		Cuando se pulsa la tecla '*' borrar el LCD
+	Ejemplo 2.Diseñar un sistema para el control de acceso; a través de un
+		teclado de 3x4 introducir una clave de 3 dígitos que cuando
+		sea correcta abra una puerta (con un pulso a un relé) y lo
+		indique a una pantalla LCD. Guardar la clave de acceso en
+		la memoria EEPROM.
+	Ejemplo 3.A través de un teclado, introducir los datos de velocidad de
+		un motor y generar una señal modulada en ancho de pulso
+		proporcional al dato de la velocidad
+Clase 6 y 7.
+	Ejemplo 1.(4) Escribir en la pantalla pero sin libreria.
+	Ejemplo 2.(5) Secuencia de leds con interrupcion.
+	Ejemplo 3.(6) Generar señal de 1 KHz (pendiente)
+	Ejemplo 4. (7) Retardo de 1s con timer. (pendiente)
+	Ejemplo 5. Medir el ancho de pulso --< pendiente >--
+	Ejemplo 7. (9) Texto como un celular de 2a generacion. (pendiente)
+	Ejemplo 8. (8) Programa que cuenta de 0 a 60 con la funcion delay y millis()
