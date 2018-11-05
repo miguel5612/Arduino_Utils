@@ -153,12 +153,12 @@ boolean specialK(String key)
   }
   else if(key == "Up Arrow")
   {
-    if(posY == 0 ) posY -= 1;
+    if(posY == 1 ) posY -= 1;
     return false;
   }
   else if(key == "Down Arrow")
   {
-    if(posY == 1 ) posY += 1;
+    if(posY == 0 ) posY += 1;
     return false;
   }
   else if(key == "F1")
