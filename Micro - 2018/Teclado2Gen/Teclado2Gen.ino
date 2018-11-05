@@ -62,6 +62,7 @@ void loop()
 {
   unsigned long oldTime;
   int pos = 0;
+  lcd.blink();
   readKeyboard();
   if(newKey()){
       Serial.println("Primera pulsasion");
@@ -71,6 +72,7 @@ void loop()
       Serial.println(keyString);
       if(specialK(keyString))
       {
+        lcd.noBlink();
         Serial.println("is not special key");
         //Si no es una tecla especial
         //Activo la condicion, si vuelve a presionar la misma letra cambiare.
