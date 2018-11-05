@@ -26,9 +26,9 @@ const String tres[] = {"d", "e", "f","3"};
 const String cuatro[] = {"g", "h", "i","4"};
 const String cinco[] = {"j", "k", "l","5"};
 const String seis[] = {"m", "n", "o","6"};
-const String siete[] = {"p", "q", "r","7"};
-const String ocho[] = {"s", "t", "v","8"};
-const String nueve[] = {"w", "x", "y","9"};
+String siete[] = {"p", "q", "r", "s","7"};
+const String ocho[] = {"t", "u", "v","8"};
+String nueve[] = {"w", "x", "y", "z", "9"};
 
 String palabraIn[32];
 #define exitKey "Esc"
@@ -222,7 +222,18 @@ boolean specialK(String key)
   }
 }
 String getNumber(int numIn, int pos){
-  if(pos>=4){pos = pos/3;}
+  if(numIn>=0 & numIn<=6)
+  {
+    if(pos>=4){pos = pos/3;}
+  }
+  else  if(numIn == 8)
+  {
+    if(pos>=4){pos = pos/3;}
+  }
+  else if(numIn == 7 || numIn == 9)
+  {
+      if(pos>=5){pos = pos/5;}
+  }
   switch(numIn){
     case 0:
       return cero[pos];
